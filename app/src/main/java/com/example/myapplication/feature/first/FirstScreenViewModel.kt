@@ -13,27 +13,44 @@ class FirstScreenViewModel : ViewModel() {
 
     fun onIncrementClicked() {
         _uiState.update {
-            it.copy(boxCount = it.boxCount + 1)
+            it.copy(boxes = it.boxes + Box(color = Color.Red))
         }
     }
 
     fun onDecrementClicked() {
-        if (_uiState.value.boxCount == 0) return
+        if (_uiState.value.boxes.isEmpty()) return
 
         _uiState.update {
-            it.copy(boxCount = it.boxCount - 1)
+            it.copy(boxes = it.boxes.toMutableList().dropLast(1))
         }
     }
 
     fun onBoxCountInputChanged(input: String) {
+        val count = input.toIntOrNull() ?: return
+
         _uiState.update {
-            it.copy(boxCount = input.toIntOrNull() ?: return)
+            val newBoxes = it.boxes.toMutableList()
+            repeat(count) {
+                newBoxes.add(Box(color = Color.Red))
+            }
+
+            it.copy(boxes = newBoxes)
         }
     }
 
-    fun onBoxClick() {
+
+    fun onBoxClick(index: Int) {
         _uiState.update {
-            it.copy(boxColor = Color.Green)
+            it.copy(
+                boxes = it.boxes.mapIndexed { i, box ->
+                    if (index == i) {
+                        box.copy(color = Color.Green)
+                    } else {
+                        box
+                    }
+                }
+            )
         }
     }
 }
+

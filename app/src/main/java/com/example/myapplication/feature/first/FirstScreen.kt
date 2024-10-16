@@ -51,7 +51,7 @@ private fun FirstScreen(
     onIncrementClick: () -> Unit,
     onDecrementClick: () -> Unit,
     onBoxCountInputChange: (String) -> Unit,
-    onBoxClick: () -> Unit,
+    onBoxClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -65,17 +65,18 @@ private fun FirstScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround,
         ) {
-            repeat(times = state.boxCount) {
+
+            state.boxes.forEachIndexed { index, box ->
                 RoundedBox(
-                    onClick = onBoxClick,
-                    color = state.boxColor
+                    onClick = { onBoxClick(index) },
+                    color = box.color
                 )
             }
         }
 
         BottomBar(
             modifier = Modifier.fillMaxWidth(),
-            boxCount = state.boxCount,
+            boxCount = state.boxes.size,
             onDecrementClick = onDecrementClick,
             onIncrementClick = onIncrementClick,
             onBoxCountInputChange = onBoxCountInputChange,
@@ -141,7 +142,13 @@ private fun Preview_FirstScreen() {
     MaterialTheme {
         FirstScreen(
             modifier = Modifier.fillMaxSize(),
-            state = UiState(boxCount = 3, boxColor = Color.Red),
+            state = UiState(
+                boxes = listOf(
+                    Box(
+                        color = Color.Yellow,
+                    )
+                )
+            ),
             onDecrementClick = {},
             onIncrementClick = {},
             onBoxCountInputChange = {},
