@@ -13,12 +13,23 @@ class TodoListViewModel : ViewModel() {
         _uiState.update { it.copy(inputValue = input) }
     }
 
+
     fun onAddTaskClick() {
         val task = Task(description = _uiState.value.inputValue)
 
         _uiState.update {
             it.copy(
-                tasks = it.tasks + task
+                tasks = it.tasks + task,
+                inputValue = ""
+
+            )
+        }
+    }
+
+    fun onDeleteTaskClick(task: Task){
+        _uiState.update {
+            it.copy(
+                tasks = it.tasks - task
             )
         }
     }
